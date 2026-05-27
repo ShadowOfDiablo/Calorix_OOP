@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Date.h"
+#include "Date.h"
 
 enum class GoalType {
     WEIGHT_LOSS,

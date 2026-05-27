@@ -1,9 +1,9 @@
 #pragma once
 #include "User.h"
-#include "../Food/FoodEntries.h"
-#include "../Exercises/ExerciseEntries.h"
-#include "../FitnessGoal/FitnessGoal.h"
-#include "../Exercises/Exercise.h"
+#include "FoodEntries.h"
+#include "ExerciseEntries.h"
+#include "FitnessGoal.h"
+#include "Exercise.h"
 #include <vector>
 
 class Trainee : public User {

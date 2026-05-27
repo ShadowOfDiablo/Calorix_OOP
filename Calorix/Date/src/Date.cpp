@@ -30,7 +30,11 @@ std::string Date::dateToDtring()
 Date Date::today() {
     std::time_t t = std::time(nullptr);
     std::tm now{};
+#ifdef _WIN32
     localtime_s(&now, &t);
+#else
+    localtime_r(&t, &now);
+#endif
 
     return Date(
         now.tm_mday,

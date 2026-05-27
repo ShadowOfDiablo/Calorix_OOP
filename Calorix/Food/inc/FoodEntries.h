@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Food.h"
-#include "../Date.h"
+#include "Date.h"
 
 class FoodEntry {
 private:
