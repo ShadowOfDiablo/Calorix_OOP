@@ -1,5 +1,26 @@
 #include "Admin.h"
+#include "Calorix.h"
 #include <iostream>
+#include <unordered_map>
+
+static MuscleGroup parseMuscleGroup(const std::string& s)
+{
+    static const std::unordered_map<std::string, MuscleGroup> table = {
+        {"CHEST",     MuscleGroup::CHEST},
+        {"BACK",      MuscleGroup::BACK},
+        {"LEGS",      MuscleGroup::LEGS},
+        {"SHOULDERS", MuscleGroup::SHOULDERS},
+        {"ARMS",      MuscleGroup::ARMS},
+        {"CORE",      MuscleGroup::CORE},
+        {"CARDIO",    MuscleGroup::CARDIO},
+    };
+    auto it = table.find(s);
+    if(it != table.end())
+    {
+        return it->second;
+    }
+    return MuscleGroup::CARDIO;
+}
 
 Admin::Admin(const std::string& username, const std::string& password,
     UserProfile profile, const std::string& adminKey)
@@ -21,4 +42,48 @@ void Admin::help() const {
         << "  add-exercise <name> <cal_per_hour> <muscle-group>\n"
         << "  update-food <food-name> <new-calories>\n"
         << "  logout\n";
+}
+
+void Admin::addFood(Calorix& system)
+{
+    std::string name;
+    int cal, protein, carbs, fat;
+    std::cout << "Enter name, calories/100g, protein/100g, carbs/100g, fat/100g:\n";
+    std::cin >> name >> cal >> protein >> carbs >> fat;
+    if(!system.addFood(name, cal, protein, carbs, fat))
+    {
+        std::cout << "Food '" << name << "' already exists.\n";
+    }
+}
+
+void Admin::addExercise(Calorix& system)
+{
+    std::string name, groupStr;
+    double calPerHour;
+    std::cout << "Enter name, calories/hour, muscle-group:\n";
+    std::cin >> name >> calPerHour >> groupStr;
+    if(!system.addExercise(name, calPerHour, parseMuscleGroup(groupStr)))
+    {
+        std::cout << "Exercise '" << name << "' already exists.\n";
+    }
+}
+
+void Admin::updateFood(Calorix& system)
+{
+    std::string name;
+    int newCal;
+    std::cout << "Enter food name and new calories/100g:\n";
+    std::cin >> name >> newCal;
+    if(!system.updateFood(name, newCal))
+    {
+        std::cout << "Food '" << name << "' not found.\n";
+    }
+}
+
+void Admin::blockUser(const std::string& username, Calorix& system)
+{
+    if(!system.blockUser(username))
+    {
+        std::cout << "User '" << username << "' not found.\n";
+    }
 }

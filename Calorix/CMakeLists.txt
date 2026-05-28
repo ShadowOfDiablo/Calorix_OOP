@@ -9,6 +9,6 @@ add_subdirectory(FitnessGoal)
 add_subdirectory(Food)
 add_subdirectory(UsersLogic)
 
-add_executable(calorix Calorix.cpp)
+add_executable(calorix main.cpp)
 
 target_link_libraries(calorix PRIVATE Date Exercises FileManager FitnessGoal Food UsersLogic)

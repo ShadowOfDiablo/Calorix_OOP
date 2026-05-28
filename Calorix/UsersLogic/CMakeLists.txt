@@ -4,7 +4,7 @@ target_include_directories(UsersLogic PUBLIC
 Admin/inc
 Trainee/inc
 User/inc
-UserFactory/inc
+Calorix/inc
 UserProfile/inc
 )
 
