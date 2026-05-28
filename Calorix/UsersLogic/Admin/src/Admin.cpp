@@ -86,4 +86,5 @@ void Admin::blockUser(const std::string& username, Calorix& system)
     {
         std::cout << "User '" << username << "' not found.\n";
     }
+    system.blockUser(username);
 }
