@@ -79,6 +79,10 @@ static void runTest(Calorix& system)
     std::cout << "\n";
     trainee->viewFavorites();
 
+    std::cout << "\n";
+    trainee->calculateBMI();
+    trainee->calculateBMR();
+
     // --- Block user ---
     std::cout << "\n";
     bool blocked = system.blockUser("trainee1");

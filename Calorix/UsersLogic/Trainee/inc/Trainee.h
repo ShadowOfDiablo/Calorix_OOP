@@ -32,6 +32,8 @@ public:
     void viewProgress() const;
     void addToFavorites(Calorix& system);
     void viewFavorites() const;
+    void calculateBMI() const;
+    void calculateBMR() const;
 
     const std::vector<FoodEntry>& getFoodDiary()         const;
     const std::vector<ExerciseEntry>& getExerciseDiary()     const;

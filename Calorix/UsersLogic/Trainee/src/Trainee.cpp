@@ -183,6 +183,62 @@ void Trainee::viewFavorites() const
     }
 }
 
+void Trainee::calculateBMI() const
+{
+    double weight = getProfile().getWeight();
+    double height = getProfile().getHeight();
+    double bmi = weight / (height * height);
+
+    std::string category;
+    if(bmi < 18.5)
+        category = "Underweight";
+    else if(bmi < 25.0)
+        category = "Normal weight";
+    else if(bmi < 30.0)
+        category = "Overweight";
+    else
+        category = "Obese";
+
+    std::cout << "BMI: " << bmi << "  (" << category << ")\n";
+}
+
+void Trainee::calculateBMR() const
+{
+    // Harris-Benedict equation constants
+    constexpr double MALE_BASE        = 88.362;
+    constexpr double MALE_WEIGHT_COEF = 13.397;
+    constexpr double MALE_HEIGHT_COEF =  4.799;
+    constexpr double MALE_AGE_COEF    =  5.677;
+
+    constexpr double FEMALE_BASE        = 447.593;
+    constexpr double FEMALE_WEIGHT_COEF =   9.247;
+    constexpr double FEMALE_HEIGHT_COEF =   3.098;
+    constexpr double FEMALE_AGE_COEF    =   4.330;
+
+    double weight    = getProfile().getWeight();
+    double heightCm  = getProfile().getHeight() * 100.0;
+    int    age       = getProfile().getAge();
+    Gender gender    = getProfile().getGender();
+
+    double bmr;
+    if(gender == Gender::MALE)
+    {
+        bmr = MALE_BASE + (MALE_WEIGHT_COEF * weight) + (MALE_HEIGHT_COEF * heightCm) - (MALE_AGE_COEF * age);
+    }
+    else if(gender == Gender::FEMALE)
+    {
+        bmr = FEMALE_BASE + (FEMALE_WEIGHT_COEF * weight) + (FEMALE_HEIGHT_COEF * heightCm) - (FEMALE_AGE_COEF * age);
+    }
+    else
+    {
+        double male   = MALE_BASE   + (MALE_WEIGHT_COEF   * weight) + (MALE_HEIGHT_COEF   * heightCm) - (MALE_AGE_COEF   * age);
+        double female = FEMALE_BASE + (FEMALE_WEIGHT_COEF * weight) + (FEMALE_HEIGHT_COEF * heightCm) - (FEMALE_AGE_COEF * age);
+        bmr = (male + female) / 2.0;
+    }
+
+    std::cout << "BMR: " << bmr << " kcal/day (calories needed at complete rest)\n";
+}
+
 void Trainee::help() const {
     std::cout << "Available commands (Trainee):\n"
         << "  log-food <food-name> <quantity_grams>\n"
