@@ -154,6 +154,35 @@ void Trainee::viewProgress() const
     }
 }
 
+void Trainee::addToFavorites(Calorix& system)
+{
+    std::string name;
+    std::cout << "Enter exercise name:\n";
+    std::cin >> name;
+    Exercise* exercise = system.findExercise(name);
+    if(!exercise)
+    {
+        std::cout << "Exercise '" << name << "' not found.\n";
+        return;
+    }
+    addFavoriteExercise(*exercise);
+    std::cout << name << " added to favorites.\n";
+}
+
+void Trainee::viewFavorites() const
+{
+    if(favoriteExercises.empty())
+    {
+        std::cout << "No favorite exercises saved.\n";
+        return;
+    }
+    std::cout << "--- Favorite exercises ---\n";
+    for(const auto& ex : favoriteExercises)
+    {
+        std::cout << ex.getName() << "  |  " << ex.getCaloriesBurnedPerHour() << " kcal/h\n";
+    }
+}
+
 void Trainee::help() const {
     std::cout << "Available commands (Trainee):\n"
         << "  log-food <food-name> <quantity_grams>\n"
