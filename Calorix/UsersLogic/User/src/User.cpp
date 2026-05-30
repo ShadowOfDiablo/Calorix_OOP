@@ -46,3 +46,8 @@ std::string User::getPassword() const
 int User::getId() const {
 	return userId;
 }
+
+const UserProfile& User::getProfile() const
+{
+    return profile;
+}

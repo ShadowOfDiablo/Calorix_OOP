@@ -14,6 +14,7 @@ public:
 	std::string getUsername() const;
 	std::string getPassword() const;
 	int getId() const;
+	const UserProfile& getProfile() const;
 
 	virtual ~User() = default;
 	virtual void help() const = 0;

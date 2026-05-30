@@ -28,6 +28,8 @@ public:
 
     void logFood(Calorix& system);
     void logExercise(Calorix& system);
+    void viewDailySummary() const;
+    void viewProgress() const;
 
     const std::vector<FoodEntry>& getFoodDiary()         const;
     const std::vector<ExerciseEntry>& getExerciseDiary()     const;

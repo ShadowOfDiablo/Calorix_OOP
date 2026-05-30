@@ -78,6 +78,82 @@ void Trainee::logExercise(Calorix& system)
     std::cout << "Logged " << minutes << " minutes of " << name << ".\n";
 }
 
+void Trainee::viewDailySummary() const
+{
+    Date today = Date::today();
+    double totalCal = 0, totalProtein = 0, totalCarbs = 0, totalFat = 0;
+
+    std::cout << "--- Food today ---\n";
+    for(const auto& entry : foodDiary)
+    {
+        if(entry.getDate() == today)
+        {
+            double cal = entry.calculateCalories();
+            std::cout << entry.getFood().getName() << "  " << entry.getQuantityGrams()
+                      << "g  |  " << cal << " kcal\n";
+            totalCal     += cal;
+            totalProtein += entry.calculateProtein();
+            totalCarbs   += entry.calculateCarbs();
+            totalFat     += entry.calculateFat();
+        }
+    }
+    std::cout << "Total intake:  " << totalCal << " kcal  |  protein " << totalProtein
+              << "g  |  carbs " << totalCarbs << "g  |  fat " << totalFat << "g\n\n";
+
+    double totalBurned = 0;
+    std::cout << "--- Exercise today ---\n";
+    for(const auto& entry : exerciseDiary)
+    {
+        if(entry.getDate() == today)
+        {
+            double burned = entry.calculateBurnedCalories();
+            std::cout << entry.getExercise().getName() << "  " << entry.getDurationMinutes()
+                      << " min  |  " << burned << " kcal burned\n";
+            totalBurned += burned;
+        }
+    }
+    std::cout << "Total burned:  " << totalBurned << " kcal\n";
+    std::cout << "Net calories:  " << totalCal - totalBurned << " kcal\n";
+}
+
+void Trainee::viewProgress() const
+{
+    double currentWeight = getProfile().getWeight();
+    std::cout << "Current weight: " << currentWeight << " kg\n";
+
+    if(goals.empty())
+    {
+        std::cout << "No goals set.\n";
+        return;
+    }
+
+    std::cout << "--- Goals ---\n";
+    for(const auto& goal : goals)
+    {
+        std::string typeStr;
+        switch(goal.getGoalType())
+        {
+            case GoalType::WEIGHT_LOSS:   typeStr = "Weight loss";   break;
+            case GoalType::BULKING:       typeStr = "Bulking";       break;
+            case GoalType::MAINTENANCE:   typeStr = "Maintenance";   break;
+        }
+        double target = goal.getTargetValue();
+        double diff   = currentWeight - target;
+        std::cout << typeStr << "  |  target " << target << " kg"
+                  << "  |  deadline " << goal.getDeadline().toString()
+                  << "  |  ";
+        if(goal.getIsAchieved())
+        {
+            std::cout << "ACHIEVED\n";
+        }
+        else
+        {
+            std::cout << (diff > 0 ? diff : -diff) << " kg "
+                      << (diff > 0 ? "to lose" : "to gain") << "\n";
+        }
+    }
+}
+
 void Trainee::help() const {
     std::cout << "Available commands (Trainee):\n"
         << "  log-food <food-name> <quantity_grams>\n"

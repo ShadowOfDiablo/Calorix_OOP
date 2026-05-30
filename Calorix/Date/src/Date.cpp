@@ -20,6 +20,13 @@ bool Date::operator==(const Date& other) const {
 }
 
 
+std::string Date::toString() const
+{
+    return std::to_string(day) + "." +
+        std::to_string(month) + "." +
+        std::to_string(year);
+}
+
 std::string Date::dateToDtring()
 {
     return std::to_string(day) + "." +
