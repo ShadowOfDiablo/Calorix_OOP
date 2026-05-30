@@ -23,34 +23,36 @@ static MuscleGroup parseMuscleGroup(const std::string& s)
 }
 
 Admin::Admin(const std::string& username, const std::string& password,
-    UserProfile profile, const std::string& adminKey)
-    : User(username, password, profile), adminKey(adminKey) {
+             UserProfile profile, const std::string& adminKey)
+    : User(username, password, profile), adminKey(adminKey)
+{
 }
 
-Admin::Admin(int id, const std::string& username, const std::string& password,
-    UserProfile profile, const std::string& adminKey)
-    : User(id, username, password, profile), adminKey(adminKey)
+Admin::Admin(int s8Id, const std::string& username, const std::string& password,
+             UserProfile profile, const std::string& adminKey)
+    : User(s8Id, username, password, profile), adminKey(adminKey)
 {
 }
 
 const std::string& Admin::getAdminKey() const { return adminKey; }
 
-void Admin::help() const {
+void Admin::help() const
+{
     std::cout << "Available commands (Admin):\n"
-        << "  block-user <username>\n"
-        << "  add-food <name> <calories> <protein> <carbs> <fat>\n"
-        << "  add-exercise <name> <cal_per_hour> <muscle-group>\n"
-        << "  update-food <food-name> <new-calories>\n"
-        << "  logout\n";
+              << "  block-user <username>\n"
+              << "  add-food <name> <calories> <protein> <carbs> <fat>\n"
+              << "  add-exercise <name> <cal_per_hour> <muscle-group>\n"
+              << "  update-food <food-name> <new-calories>\n"
+              << "  logout\n";
 }
 
 void Admin::addFood(Calorix& system)
 {
     std::string name;
-    int cal, protein, carbs, fat;
+    int s8Cal, s8Protein, s8Carbs, s8Fat;
     std::cout << "Enter name, calories/100g, protein/100g, carbs/100g, fat/100g:\n";
-    std::cin >> name >> cal >> protein >> carbs >> fat;
-    if(!system.addFood(name, cal, protein, carbs, fat))
+    std::cin >> name >> s8Cal >> s8Protein >> s8Carbs >> s8Fat;
+    if(!system.addFood(name, s8Cal, s8Protein, s8Carbs, s8Fat))
     {
         std::cout << "Food '" << name << "' already exists.\n";
     }
@@ -59,10 +61,10 @@ void Admin::addFood(Calorix& system)
 void Admin::addExercise(Calorix& system)
 {
     std::string name, groupStr;
-    double calPerHour;
+    double f32CalPerHour;
     std::cout << "Enter name, calories/hour, muscle-group:\n";
-    std::cin >> name >> calPerHour >> groupStr;
-    if(!system.addExercise(name, calPerHour, parseMuscleGroup(groupStr)))
+    std::cin >> name >> f32CalPerHour >> groupStr;
+    if(!system.addExercise(name, f32CalPerHour, parseMuscleGroup(groupStr)))
     {
         std::cout << "Exercise '" << name << "' already exists.\n";
     }
@@ -71,10 +73,10 @@ void Admin::addExercise(Calorix& system)
 void Admin::updateFood(Calorix& system)
 {
     std::string name;
-    int newCal;
+    int s8NewCal;
     std::cout << "Enter food name and new calories/100g:\n";
-    std::cin >> name >> newCal;
-    if(!system.updateFood(name, newCal))
+    std::cin >> name >> s8NewCal;
+    if(!system.updateFood(name, s8NewCal))
     {
         std::cout << "Food '" << name << "' not found.\n";
     }
@@ -85,6 +87,7 @@ void Admin::blockUser(const std::string& username, Calorix& system)
     if(!system.blockUser(username))
     {
         std::cout << "User '" << username << "' not found.\n";
+        return;
     }
-    system.blockUser(username);
+    std::cout << "User '" << username << "' blocked.\n";
 }

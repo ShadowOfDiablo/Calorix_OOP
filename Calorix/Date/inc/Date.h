@@ -1,34 +1,38 @@
-#pragma once
+#ifndef DATE_H
+#define DATE_H
+
 #include <string>
 #include <compare>
 
-class Date {
+class Date
+{
 private:
-    int day;
-    int month;
-    int year;
+    int s8Day;
+    int s8Month;
+    int s8Year;
 
 public:
-    Date(int day, int month, int year);
+    Date(int s8Day, int s8Month, int s8Year);
 
-    int getDay() const;
+    int getDay()   const;
     int getMonth() const;
-    int getYear() const;
+    int getYear()  const;
 
-    std::string toString() const;
+    std::string toString()     const;
+    std::string dateToDtring();
 
     bool operator==(const Date& other) const;
 
-    auto operator<=>(const Date& other) const {
-        if (year != other.year)
-            return year <=> other.year;
-
-        if (month != other.month)
-            return month <=> other.month;
-
-        return day <=> other.day;
+    auto operator<=>(const Date& other) const
+    {
+        if(s8Year != other.s8Year)
+            return s8Year <=> other.s8Year;
+        if(s8Month != other.s8Month)
+            return s8Month <=> other.s8Month;
+        return s8Day <=> other.s8Day;
     }
-    std::string dateToDtring();
 
     static Date today();
 };
+
+#endif // DATE_H

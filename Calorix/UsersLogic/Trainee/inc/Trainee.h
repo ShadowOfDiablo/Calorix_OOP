@@ -1,4 +1,6 @@
-#pragma once
+#ifndef TRAINEE_H
+#define TRAINEE_H
+
 #include "User.h"
 #include "FoodEntries.h"
 #include "ExerciseEntries.h"
@@ -8,39 +10,39 @@
 
 class Calorix;
 
-class Trainee : public User {
+class Trainee : public User
+{
 private:
     std::vector<FoodEntry>     foodDiary;
     std::vector<ExerciseEntry> exerciseDiary;
     std::vector<FitnessGoal>   goals;
     std::vector<Exercise>      favoriteExercises;
-public:
-    Trainee(const std::string& username, const std::string& password,
-        UserProfile profile);
 
-    Trainee(int id, const std::string& username, const std::string& password,
-        UserProfile profile);
+public:
+    Trainee(const std::string& username, const std::string& password, UserProfile profile);
+    Trainee(int s8Id, const std::string& username, const std::string& password, UserProfile profile);
 
     void addFoodEntry(const FoodEntry& entry);
     void addExerciseEntry(const ExerciseEntry& entry);
     void addGoal(const FitnessGoal& goal);
     void addFavoriteExercise(const Exercise& ex);
 
+    const std::vector<FoodEntry>&     getFoodDiary()         const;
+    const std::vector<ExerciseEntry>& getExerciseDiary()     const;
+    const std::vector<FitnessGoal>&   getGoals()             const;
+    const std::vector<Exercise>&      getFavoriteExercises() const;
+
     void logFood(Calorix& system);
     void logExercise(Calorix& system);
     void viewDailySummary() const;
-    void viewProgress() const;
+    void viewProgress()     const;
     void addToFavorites(Calorix& system);
-    void viewFavorites() const;
-    void calculateBMI() const;
-    void calculateBMR() const;
-
-    const std::vector<FoodEntry>& getFoodDiary()         const;
-    const std::vector<ExerciseEntry>& getExerciseDiary()     const;
-    const std::vector<FitnessGoal>& getGoals()             const;
-    const std::vector<Exercise>& getFavoriteExercises() const;
+    void viewFavorites()    const;
+    void calculateBMI()     const;
+    void calculateBMR()     const;
 
     void help() const override;
     ~Trainee() override = default;
 };
 
+#endif // TRAINEE_H

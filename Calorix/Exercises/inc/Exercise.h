@@ -1,7 +1,10 @@
-#pragma once
+#ifndef EXERCISE_H
+#define EXERCISE_H
+
 #include <string>
 
-enum class MuscleGroup {
+enum class MuscleGroup
+{
     CHEST,
     BACK,
     LEGS,
@@ -11,31 +14,32 @@ enum class MuscleGroup {
     CARDIO
 };
 
-class Exercise {
+class Exercise
+{
 private:
-    int exerciseId;
+    int         s8ExerciseId;
     std::string name;
-    double caloriesBurnedPerHour;
+    double      f32CaloriesBurnedPerHour;
     MuscleGroup muscleGroup;
 
 public:
-    static int idGenerator;
+    static int s8IdGenerator;
+
     Exercise(const std::string& name,
-        double caloriesBurnedPerHour,
-        MuscleGroup muscleGroup);
+             double f32CaloriesBurnedPerHour,
+             MuscleGroup muscleGroup);
 
-    Exercise(int id,
-        const std::string& name,
-        double caloriesBurnedPerHour,
-        MuscleGroup muscleGroup);
+    Exercise(int s8Id,
+             const std::string& name,
+             double f32CaloriesBurnedPerHour,
+             MuscleGroup muscleGroup);
 
-    int getExerciseId() const;
+    int         getExerciseId()            const;
+    std::string getName()                  const;
+    double      getCaloriesBurnedPerHour() const;
+    MuscleGroup getMuscleGroup()           const;
 
-    std::string getName() const;
-
-    double getCaloriesBurnedPerHour() const;
-
-    MuscleGroup getMuscleGroup() const;
-
-    static void setIdGenerator(int val);
+    static void setIdGenerator(int s8Val);
 };
+
+#endif // EXERCISE_H

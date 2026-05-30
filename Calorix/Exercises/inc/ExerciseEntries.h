@@ -1,29 +1,28 @@
-#pragma once
+#ifndef EXERCISE_ENTRIES_H
+#define EXERCISE_ENTRIES_H
 
 #include "Exercise.h"
 #include "Date.h"
 
-class ExerciseEntry {
+class ExerciseEntry
+{
 private:
-   int entryId;
-   const Exercise& exercise;
-   int durationMinutes;
-   Date date;
+    int              s8EntryId;
+    const Exercise&  exercise;
+    int              s8DurationMinutes;
+    Date             date;
 
 public:
-    static int idGenerator;
-    ExerciseEntry(const Exercise& exercise,
-        int durationMinutes,
-        const Date& date);
-   
+    static int s8IdGenerator;
 
-    int getEntryId() const;
+    ExerciseEntry(const Exercise& exercise, int s8DurationMinutes, const Date& date);
 
-    const Exercise& getExercise() const;
-
-    int getDurationMinutes() const;
-
-    Date getDate() const;
+    int             getEntryId()        const;
+    const Exercise& getExercise()       const;
+    int             getDurationMinutes() const;
+    Date            getDate()           const;
 
     double calculateBurnedCalories() const;
 };
+
+#endif // EXERCISE_ENTRIES_H

@@ -1,6 +1,10 @@
-#pragma once
+#ifndef USER_PROFILE_H
+#define USER_PROFILE_H
+
 #include <string>
-enum class ActivityLevel {
+
+enum class ActivityLevel
+{
     SEDENTARY,
     LIGHT,
     MODERATE,
@@ -8,33 +12,35 @@ enum class ActivityLevel {
     VERY_ACTIVE
 };
 
-enum class Gender {
+enum class Gender
+{
     FEMALE,
     MALE,
     OTHER
 };
 
-class UserProfile {
+class UserProfile
+{
 private:
-    int age;
-    double weight;
-    double height;
-    Gender gender;
+    int           s8Age;
+    double        f32Weight;
+    double        f32Height;
+    Gender        gender;
     ActivityLevel activityLevel;
 
 public:
-    UserProfile(
-        int age,
-        double weight,
-        double height,
-        Gender gender,
-        ActivityLevel activityLevel
-    );
+    UserProfile(int s8Age,
+                double f32Weight,
+                double f32Height,
+                Gender gender,
+                ActivityLevel activityLevel);
     UserProfile() = default;
 
-    int getAge() const;
-    double getWeight() const;
-    double getHeight() const;
-    Gender getGender() const;
+    int           getAge()           const;
+    double        getWeight()        const;
+    double        getHeight()        const;
+    Gender        getGender()        const;
     ActivityLevel getActivityLevel() const;
 };
+
+#endif // USER_PROFILE_H

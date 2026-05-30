@@ -1,40 +1,38 @@
 #include "Date.h"
 #include <ctime>
 
-
-Date::Date(int day, int month, int year)
-    : day(day), month(month), year(year) {
-}
-//validation!
-
-
-int Date::getDay() const { return day; }
-int Date::getMonth() const { return month; }
-int Date::getYear() const { return year; }
-
-
-bool Date::operator==(const Date& other) const {
-    return day == other.day &&
-        month == other.month &&
-        year == other.year;
+Date::Date(int s8Day, int s8Month, int s8Year)
+    : s8Day(s8Day), s8Month(s8Month), s8Year(s8Year)
+{
 }
 
+int Date::getDay()   const { return s8Day; }
+int Date::getMonth() const { return s8Month; }
+int Date::getYear()  const { return s8Year; }
+
+bool Date::operator==(const Date& other) const
+{
+    return s8Day   == other.s8Day   &&
+           s8Month == other.s8Month &&
+           s8Year  == other.s8Year;
+}
 
 std::string Date::toString() const
 {
-    return std::to_string(day) + "." +
-        std::to_string(month) + "." +
-        std::to_string(year);
+    return std::to_string(s8Day) + "." +
+           std::to_string(s8Month) + "." +
+           std::to_string(s8Year);
 }
 
 std::string Date::dateToDtring()
 {
-    return std::to_string(day) + "." +
-        std::to_string(month) + "." +
-        std::to_string(year);
+    return std::to_string(s8Day) + "." +
+           std::to_string(s8Month) + "." +
+           std::to_string(s8Year);
 }
 
-Date Date::today() {
+Date Date::today()
+{
     std::time_t t = std::time(nullptr);
     std::tm now{};
 #ifdef _WIN32
@@ -42,10 +40,5 @@ Date Date::today() {
 #else
     localtime_r(&t, &now);
 #endif
-
-    return Date(
-        now.tm_mday,
-        now.tm_mon + 1,
-        now.tm_year + 1900
-    );
+    return Date(now.tm_mday, now.tm_mon + 1, now.tm_year + 1900);
 }

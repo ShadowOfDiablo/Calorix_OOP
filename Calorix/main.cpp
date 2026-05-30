@@ -11,37 +11,37 @@ static GoalType parseGoalType(const std::string& s)
     return GoalType::MAINTENANCE;
 }
 
-static void runTraineeSession(Trainee* trainee, Calorix& system)
+static void runTraineeSession(Trainee* p_trainee, Calorix& system)
 {
-    trainee->help();
+    p_trainee->help();
     std::string cmd;
     while(std::cin >> cmd && cmd != "logout")
     {
         if(cmd == "log-food")
-            trainee->logFood(system);
+            p_trainee->logFood(system);
         else if(cmd == "log-exercise")
-            trainee->logExercise(system);
+            p_trainee->logExercise(system);
         else if(cmd == "view-daily-summary")
-            trainee->viewDailySummary();
+            p_trainee->viewDailySummary();
         else if(cmd == "view-progress")
-            trainee->viewProgress();
+            p_trainee->viewProgress();
         else if(cmd == "calculate-bmi")
-            trainee->calculateBMI();
+            p_trainee->calculateBMI();
         else if(cmd == "calculate-bmr")
-            trainee->calculateBMR();
+            p_trainee->calculateBMR();
         else if(cmd == "add-to-favorites")
-            trainee->addToFavorites(system);
+            p_trainee->addToFavorites(system);
         else if(cmd == "view-favorites")
-            trainee->viewFavorites();
+            p_trainee->viewFavorites();
         else if(cmd == "set-goals")
         {
             std::string typeStr;
-            double target;
+            double f32Target;
             int sd, sm, sy, dd, dm, dy;
             std::cout << "Enter goal type (WEIGHT_LOSS/BULKING/MAINTENANCE), target value, "
                          "start date (dd mm yyyy), deadline (dd mm yyyy):\n";
-            std::cin >> typeStr >> target >> sd >> sm >> sy >> dd >> dm >> dy;
-            trainee->addGoal(FitnessGoal(parseGoalType(typeStr), target,
+            std::cin >> typeStr >> f32Target >> sd >> sm >> sy >> dd >> dm >> dy;
+            p_trainee->addGoal(FitnessGoal(parseGoalType(typeStr), f32Target,
                 Date(sd, sm, sy), Date(dd, dm, dy)));
             std::cout << "Goal added.\n";
         }
@@ -53,23 +53,23 @@ static void runTraineeSession(Trainee* trainee, Calorix& system)
     std::cout << "Logged out.\n";
 }
 
-static void runAdminSession(Admin* admin, Calorix& system)
+static void runAdminSession(Admin* p_admin, Calorix& system)
 {
-    admin->help();
+    p_admin->help();
     std::string cmd;
     while(std::cin >> cmd && cmd != "logout")
     {
         if(cmd == "add-food")
-            admin->addFood(system);
+            p_admin->addFood(system);
         else if(cmd == "add-exercise")
-            admin->addExercise(system);
+            p_admin->addExercise(system);
         else if(cmd == "update-food")
-            admin->updateFood(system);
+            p_admin->updateFood(system);
         else if(cmd == "block-user")
         {
             std::string username;
             std::cin >> username;
-            admin->blockUser(username, system);
+            p_admin->blockUser(username, system);
         }
         else
             std::cout << "Unknown command. Type 'logout' to exit.\n";
@@ -87,10 +87,10 @@ static Gender parseGender(const std::string& s)
 static ActivityLevel parseActivityLevel(const std::string& s)
 {
     static const std::unordered_map<std::string, ActivityLevel> table = {
-        {"SEDENTARY",  ActivityLevel::SEDENTARY},
-        {"LIGHT",      ActivityLevel::LIGHT},
-        {"MODERATE",   ActivityLevel::MODERATE},
-        {"ACTIVE",     ActivityLevel::ACTIVE},
+        {"SEDENTARY",   ActivityLevel::SEDENTARY},
+        {"LIGHT",       ActivityLevel::LIGHT},
+        {"MODERATE",    ActivityLevel::MODERATE},
+        {"ACTIVE",      ActivityLevel::ACTIVE},
         {"VERY_ACTIVE", ActivityLevel::VERY_ACTIVE},
     };
     auto it = table.find(s);
@@ -103,14 +103,14 @@ static void runTest(Calorix& system)
 {
     std::cout << "=== Running test ===\n\n";
 
-    // --- Admin setup ---
     bool adminOk = system.registerAdmin("admin1", "adminpass", "SECRET");
     std::cout << "Register admin1: " << (adminOk ? "OK" : "FAIL") << "\n";
 
-    User* adminUser = system.login("admin1", "adminpass");
-    std::cout << "Login admin1: " << (adminUser ? "OK" : "FAIL") << "\n";
+    User* p_adminUser = system.login("admin1", "adminpass");
+    std::cout << "Login admin1: " << (p_adminUser ? "OK" : "FAIL") << "\n";
 
-    Admin* admin = dynamic_cast<Admin*>(adminUser);
+    Admin* p_admin = dynamic_cast<Admin*>(p_adminUser);
+    (void)p_admin;
 
     system.addFood("Chicken", 165, 31, 0, 4);
     system.addFood("Rice", 130, 3, 28, 1);
@@ -118,15 +118,12 @@ static void runTest(Calorix& system)
     system.addExercise("Squats", 400.0, MuscleGroup::LEGS);
     std::cout << "Admin added 2 foods and 2 exercises.\n";
 
-    // Duplicate food should fail
     bool dupFood = system.addFood("Chicken", 165, 31, 0, 4);
     std::cout << "Add duplicate Chicken: " << (!dupFood ? "correctly rejected" : "FAIL") << "\n";
 
-    // Update food
     bool updated = system.updateFood("Rice", 140);
     std::cout << "Update Rice calories: " << (updated ? "OK" : "FAIL") << "\n";
 
-    // --- Trainee setup ---
     bool traineeOk = system.registerTrainee(
         "trainee1", "pass123",
         25, 80.0, 1.80,
@@ -134,7 +131,6 @@ static void runTest(Calorix& system)
     );
     std::cout << "Register trainee1: " << (traineeOk ? "OK" : "FAIL") << "\n";
 
-    // Duplicate username should fail
     bool dupUser = system.registerTrainee(
         "trainee1", "other",
         20, 70.0, 1.75,
@@ -142,50 +138,47 @@ static void runTest(Calorix& system)
     );
     std::cout << "Register duplicate trainee1: " << (!dupUser ? "correctly rejected" : "FAIL") << "\n";
 
-    User* traineeUser = system.login("trainee1", "pass123");
-    std::cout << "Login trainee1: " << (traineeUser ? "OK" : "FAIL") << "\n";
+    User* p_traineeUser = system.login("trainee1", "pass123");
+    std::cout << "Login trainee1: " << (p_traineeUser ? "OK" : "FAIL") << "\n";
 
-    Trainee* trainee = dynamic_cast<Trainee*>(traineeUser);
+    Trainee* p_trainee = dynamic_cast<Trainee*>(p_traineeUser);
 
-    // Wrong password
-    User* badLogin = system.login("trainee1", "wrongpass");
-    std::cout << "Login with wrong password: " << (!badLogin ? "correctly rejected" : "FAIL") << "\n";
+    User* p_badLogin = system.login("trainee1", "wrongpass");
+    std::cout << "Login with wrong password: " << (!p_badLogin ? "correctly rejected" : "FAIL") << "\n";
 
-    // --- Trainee actions ---
-    Food* chicken = system.findFood("Chicken");
-    Food* rice    = system.findFood("Rice");
-    Exercise* running = system.findExercise("Running");
-    Exercise* squats  = system.findExercise("Squats");
+    Food* p_chicken    = system.findFood("Chicken");
+    Food* p_rice       = system.findFood("Rice");
+    Exercise* p_running = system.findExercise("Running");
+    Exercise* p_squats  = system.findExercise("Squats");
 
-    trainee->addFoodEntry(FoodEntry(*chicken, 200.0, Date::today()));
-    trainee->addFoodEntry(FoodEntry(*rice,    150.0, Date::today()));
-    trainee->addExerciseEntry(ExerciseEntry(*running, 30, Date::today()));
-    trainee->addExerciseEntry(ExerciseEntry(*squats,  20, Date::today()));
+    p_trainee->addFoodEntry(FoodEntry(*p_chicken, 200.0, Date::today()));
+    p_trainee->addFoodEntry(FoodEntry(*p_rice,    150.0, Date::today()));
+    p_trainee->addExerciseEntry(ExerciseEntry(*p_running, 30, Date::today()));
+    p_trainee->addExerciseEntry(ExerciseEntry(*p_squats,  20, Date::today()));
     std::cout << "\nLogged food and exercise entries.\n";
 
-    trainee->addFavoriteExercise(*running);
-    trainee->addFavoriteExercise(*squats);
+    p_trainee->addFavoriteExercise(*p_running);
+    p_trainee->addFavoriteExercise(*p_squats);
 
     std::cout << "\n";
-    trainee->viewDailySummary();
+    p_trainee->viewDailySummary();
 
     std::cout << "\n";
-    trainee->viewProgress();
+    p_trainee->viewProgress();
 
     std::cout << "\n";
-    trainee->viewFavorites();
+    p_trainee->viewFavorites();
 
     std::cout << "\n";
-    trainee->calculateBMI();
-    trainee->calculateBMR();
+    p_trainee->calculateBMI();
+    p_trainee->calculateBMR();
 
-    // --- Block user ---
     std::cout << "\n";
     bool blocked = system.blockUser("trainee1");
     std::cout << "Block trainee1: " << (blocked ? "OK" : "FAIL") << "\n";
 
-    User* afterBlock = system.login("trainee1", "pass123");
-    std::cout << "Login after block: " << (!afterBlock ? "correctly rejected" : "FAIL") << "\n";
+    User* p_afterBlock = system.login("trainee1", "pass123");
+    std::cout << "Login after block: " << (!p_afterBlock ? "correctly rejected" : "FAIL") << "\n";
 
     std::cout << "\n=== Test complete ===\n\n";
 }
@@ -207,18 +200,18 @@ int main()
             std::string user, password;
             std::cout << "Enter your username and password:\n";
             std::cin >> user >> password;
-            User* logged = system.login(user, password);
-            if(!logged)
+            User* p_logged = system.login(user, password);
+            if(!p_logged)
             {
                 std::cout << "Wrong credentials\n";
             }
             else
             {
                 std::cout << "Welcome back " << user << "!\n";
-                if(Admin* admin = dynamic_cast<Admin*>(logged))
-                    runAdminSession(admin, system);
-                else if(Trainee* trainee = dynamic_cast<Trainee*>(logged))
-                    runTraineeSession(trainee, system);
+                if(Admin* p_admin = dynamic_cast<Admin*>(p_logged))
+                    runAdminSession(p_admin, system);
+                else if(Trainee* p_trainee = dynamic_cast<Trainee*>(p_logged))
+                    runTraineeSession(p_trainee, system);
             }
         }
         else if(input == "2")
@@ -243,17 +236,17 @@ int main()
             }
             else
             {
-                int age;
-                double weight, height;
+                int s8Age;
+                double f32Weight, f32Height;
                 std::string genderStr, activityStr;
                 std::cout << "Enter age, weight (kg), height (m):\n";
-                std::cin >> age >> weight >> height;
+                std::cin >> s8Age >> f32Weight >> f32Height;
                 std::cout << "Enter gender (MALE/FEMALE/OTHER):\n";
                 std::cin >> genderStr;
                 std::cout << "Enter activity level (SEDENTARY/LIGHT/MODERATE/ACTIVE/VERY_ACTIVE):\n";
                 std::cin >> activityStr;
 
-                if(!system.registerTrainee(username, password, age, weight, height,
+                if(!system.registerTrainee(username, password, s8Age, f32Weight, f32Height,
                     parseGender(genderStr), parseActivityLevel(activityStr)))
                     std::cout << "Username '" << username << "' already taken.\n";
                 else

@@ -1,33 +1,19 @@
 #include "Calorix.h"
 
-// void UserFactory::add_user(std::unique_ptr<User> user_ptr,int id)
-// {
-//     std::pair<int,std::unique_ptr<User>> pair;
-//     pair.first = id;
-//     pair.second = std::move(user_ptr);
-//     st.insert(pair);
-// }
-bool Calorix::registerTrainee(const std::string& username,const std::string& password,int age,double weight,double height,Gender gender,ActivityLevel activityLevel)
+bool Calorix::registerTrainee(const std::string& username, const std::string& password,
+    int s8Age, double f32Weight, double f32Height, Gender gender, ActivityLevel activityLevel)
 {
     if(users.count(username) > 0)
     {
         return false;
     }
-    UserProfile profile(age,weight,height,gender,activityLevel);
-    users[username] = std::make_unique<Trainee>(username,password,profile);
+    UserProfile profile(s8Age, f32Weight, f32Height, gender, activityLevel);
+    users[username] = std::make_unique<Trainee>(username, password, profile);
     return true;
 }
 
-User* Calorix::login(const std::string& username, const std::string& password)
-{
-    std::unordered_map<std::string,std::unique_ptr<User>>::iterator it = users.find(username);
-    if(it != users.end() && it->second->getPassword() == password)
-    {
-        return it->second.get();
-    }
-    return nullptr;
-}
-bool Calorix::registerAdmin(const std::string& username, const std::string& password, const std::string& adminKey)
+bool Calorix::registerAdmin(const std::string& username, const std::string& password,
+    const std::string& adminKey)
 {
     if(users.count(username) > 0)
     {
@@ -37,34 +23,44 @@ bool Calorix::registerAdmin(const std::string& username, const std::string& pass
     return true;
 }
 
-bool Calorix::addFood(const std::string& name, int cal, int protein, int carbs, int fat)
+User* Calorix::login(const std::string& username, const std::string& password)
+{
+    auto it = users.find(username);
+    if(it != users.end() && it->second->getPassword() == password)
+    {
+        return it->second.get();
+    }
+    return nullptr;
+}
+
+bool Calorix::addFood(const std::string& name, int s8Cal, int s8Protein, int s8Carbs, int s8Fat)
 {
     if(foods.count(name) > 0)
     {
         return false;
     }
-    foods.emplace(name, Food(name, cal, protein, carbs, fat));
+    foods.emplace(name, Food(name, s8Cal, s8Protein, s8Carbs, s8Fat));
     return true;
 }
 
-bool Calorix::addExercise(const std::string& name, double calPerHour, MuscleGroup group)
+bool Calorix::addExercise(const std::string& name, double f32CalPerHour, MuscleGroup group)
 {
     if(exercises.count(name) > 0)
     {
         return false;
     }
-    exercises.emplace(name, Exercise(name, calPerHour, group));
+    exercises.emplace(name, Exercise(name, f32CalPerHour, group));
     return true;
 }
 
-bool Calorix::updateFood(const std::string& name, int newCalories)
+bool Calorix::updateFood(const std::string& name, int s8NewCalories)
 {
     auto it = foods.find(name);
     if(it == foods.end())
     {
         return false;
     }
-    it->second.setCaloriesPer100g(newCalories);
+    it->second.setCaloriesPer100g(s8NewCalories);
     return true;
 }
 
