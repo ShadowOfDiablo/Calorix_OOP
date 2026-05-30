@@ -4,6 +4,79 @@
 #include "Admin.h"
 #include "Trainee.h"
 
+static GoalType parseGoalType(const std::string& s)
+{
+    if(s == "WEIGHT_LOSS") return GoalType::WEIGHT_LOSS;
+    if(s == "BULKING")     return GoalType::BULKING;
+    return GoalType::MAINTENANCE;
+}
+
+static void runTraineeSession(Trainee* trainee, Calorix& system)
+{
+    trainee->help();
+    std::string cmd;
+    while(std::cin >> cmd && cmd != "logout")
+    {
+        if(cmd == "log-food")
+            trainee->logFood(system);
+        else if(cmd == "log-exercise")
+            trainee->logExercise(system);
+        else if(cmd == "view-daily-summary")
+            trainee->viewDailySummary();
+        else if(cmd == "view-progress")
+            trainee->viewProgress();
+        else if(cmd == "calculate-bmi")
+            trainee->calculateBMI();
+        else if(cmd == "calculate-bmr")
+            trainee->calculateBMR();
+        else if(cmd == "add-to-favorites")
+            trainee->addToFavorites(system);
+        else if(cmd == "view-favorites")
+            trainee->viewFavorites();
+        else if(cmd == "set-goals")
+        {
+            std::string typeStr;
+            double target;
+            int sd, sm, sy, dd, dm, dy;
+            std::cout << "Enter goal type (WEIGHT_LOSS/BULKING/MAINTENANCE), target value, "
+                         "start date (dd mm yyyy), deadline (dd mm yyyy):\n";
+            std::cin >> typeStr >> target >> sd >> sm >> sy >> dd >> dm >> dy;
+            trainee->addGoal(FitnessGoal(parseGoalType(typeStr), target,
+                Date(sd, sm, sy), Date(dd, dm, dy)));
+            std::cout << "Goal added.\n";
+        }
+        else if(cmd == "generate-workout-plan")
+            std::cout << "Not yet implemented.\n";
+        else
+            std::cout << "Unknown command. Type 'logout' to exit.\n";
+    }
+    std::cout << "Logged out.\n";
+}
+
+static void runAdminSession(Admin* admin, Calorix& system)
+{
+    admin->help();
+    std::string cmd;
+    while(std::cin >> cmd && cmd != "logout")
+    {
+        if(cmd == "add-food")
+            admin->addFood(system);
+        else if(cmd == "add-exercise")
+            admin->addExercise(system);
+        else if(cmd == "update-food")
+            admin->updateFood(system);
+        else if(cmd == "block-user")
+        {
+            std::string username;
+            std::cin >> username;
+            admin->blockUser(username, system);
+        }
+        else
+            std::cout << "Unknown command. Type 'logout' to exit.\n";
+    }
+    std::cout << "Logged out.\n";
+}
+
 static Gender parseGender(const std::string& s)
 {
     if(s == "MALE")   return Gender::MALE;
@@ -134,13 +207,18 @@ int main()
             std::string user, password;
             std::cout << "Enter your username and password:\n";
             std::cin >> user >> password;
-            if(system.login(user, password) != nullptr)
+            User* logged = system.login(user, password);
+            if(!logged)
             {
-                std::cout << "Welcome back " << user << "!\n";
+                std::cout << "Wrong credentials\n";
             }
             else
             {
-                std::cout << "Wrong credentials\n";
+                std::cout << "Welcome back " << user << "!\n";
+                if(Admin* admin = dynamic_cast<Admin*>(logged))
+                    runAdminSession(admin, system);
+                else if(Trainee* trainee = dynamic_cast<Trainee*>(logged))
+                    runTraineeSession(trainee, system);
             }
         }
         else if(input == "2")
