@@ -1,4 +1,5 @@
 #include "Trainee.h"
+#include "Calorix.h"
 #include <iostream>
 
 Trainee::Trainee(const std::string& username, const std::string& password,
@@ -43,6 +44,38 @@ const std::vector<FitnessGoal>& Trainee::getGoals()             const
 const std::vector<Exercise>& Trainee::getFavoriteExercises() const 
 { 
     return favoriteExercises; 
+}
+
+void Trainee::logFood(Calorix& system)
+{
+    std::string name;
+    double grams;
+    std::cout << "Enter food name and quantity (grams):\n";
+    std::cin >> name >> grams;
+    Food* food = system.findFood(name);
+    if(!food)
+    {
+        std::cout << "Food '" << name << "' not found.\n";
+        return;
+    }
+    addFoodEntry(FoodEntry(*food, grams, Date::today()));
+    std::cout << "Logged " << grams << "g of " << name << ".\n";
+}
+
+void Trainee::logExercise(Calorix& system)
+{
+    std::string name;
+    int minutes;
+    std::cout << "Enter exercise name and duration (minutes):\n";
+    std::cin >> name >> minutes;
+    Exercise* exercise = system.findExercise(name);
+    if(!exercise)
+    {
+        std::cout << "Exercise '" << name << "' not found.\n";
+        return;
+    }
+    addExerciseEntry(ExerciseEntry(*exercise, minutes, Date::today()));
+    std::cout << "Logged " << minutes << " minutes of " << name << ".\n";
 }
 
 void Trainee::help() const {

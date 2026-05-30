@@ -6,6 +6,8 @@
 #include "Exercise.h"
 #include <vector>
 
+class Calorix;
+
 class Trainee : public User {
 private:
     std::vector<FoodEntry>     foodDiary;
@@ -23,6 +25,9 @@ public:
     void addExerciseEntry(const ExerciseEntry& entry);
     void addGoal(const FitnessGoal& goal);
     void addFavoriteExercise(const Exercise& ex);
+
+    void logFood(Calorix& system);
+    void logExercise(Calorix& system);
 
     const std::vector<FoodEntry>& getFoodDiary()         const;
     const std::vector<ExerciseEntry>& getExerciseDiary()     const;
