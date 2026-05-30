@@ -88,3 +88,7 @@ Exercise* Calorix::findExercise(const std::string& name)
     }
     return nullptr;
 }
+
+const std::unordered_map<std::string, Food>&                  Calorix::getFoods()     const { return foods; }
+const std::unordered_map<std::string, Exercise>&              Calorix::getExercises() const { return exercises; }
+const std::unordered_map<std::string, std::unique_ptr<User>>& Calorix::getUsers()     const { return users; }

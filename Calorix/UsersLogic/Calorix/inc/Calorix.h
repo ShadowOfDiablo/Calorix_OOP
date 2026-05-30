@@ -9,8 +9,12 @@
 #include "Food.h"
 #include "Exercise.h"
 
+class FileManager;
+
 class Calorix
 {
+    friend class FileManager;
+
     std::unordered_map<std::string, std::unique_ptr<User>> users;
     std::unordered_map<std::string, Food>                  foods;
     std::unordered_map<std::string, Exercise>              exercises;
@@ -41,6 +45,10 @@ public:
 
     Food*     findFood(const std::string& name);
     Exercise* findExercise(const std::string& name);
+
+    const std::unordered_map<std::string, Food>&                  getFoods()     const;
+    const std::unordered_map<std::string, Exercise>&              getExercises() const;
+    const std::unordered_map<std::string, std::unique_ptr<User>>& getUsers()     const;
 };
 
 #endif // CALORIX_H

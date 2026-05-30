@@ -3,6 +3,7 @@
 #include "Calorix.h"
 #include "Admin.h"
 #include "Trainee.h"
+#include "FileManager.h"
 
 static GoalType parseGoalType(const std::string& s)
 {
@@ -253,10 +254,28 @@ int main()
                     std::cout << "Trainee registered.\n";
             }
         }
+        else if(input == "3")
+        {
+            std::string fname;
+            std::cout << "Enter filename to load:\n";
+            std::cin >> fname;
+            FileManager::load(system, fname);
+        }
         else if(input == "4")
         {
             runTest(system);
         }
+    }
+
+    std::string saveChoice;
+    std::cout << "Save before exit? (y/n):\n";
+    std::cin >> saveChoice;
+    if(saveChoice == "y" || saveChoice == "Y")
+    {
+        std::string fname;
+        std::cout << "Enter filename:\n";
+        std::cin >> fname;
+        FileManager::save(system, fname);
     }
 
     return 0;
