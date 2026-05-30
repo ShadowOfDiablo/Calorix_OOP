@@ -1,7 +1,30 @@
 #include <iostream>
+#include <unordered_map>
 #include "Calorix.h"
 #include "Admin.h"
 #include "Trainee.h"
+
+static Gender parseGender(const std::string& s)
+{
+    if(s == "MALE")   return Gender::MALE;
+    if(s == "FEMALE") return Gender::FEMALE;
+    return Gender::OTHER;
+}
+
+static ActivityLevel parseActivityLevel(const std::string& s)
+{
+    static const std::unordered_map<std::string, ActivityLevel> table = {
+        {"SEDENTARY",  ActivityLevel::SEDENTARY},
+        {"LIGHT",      ActivityLevel::LIGHT},
+        {"MODERATE",   ActivityLevel::MODERATE},
+        {"ACTIVE",     ActivityLevel::ACTIVE},
+        {"VERY_ACTIVE", ActivityLevel::VERY_ACTIVE},
+    };
+    auto it = table.find(s);
+    if(it != table.end())
+        return it->second;
+    return ActivityLevel::SEDENTARY;
+}
 
 static void runTest(Calorix& system)
 {
@@ -122,10 +145,42 @@ int main()
         }
         else if(input == "2")
         {
-            std::string user, password;
-            std::cout << "Enter your username and password:\n";
-            std::cin >> user >> password;
-            // system.registerTrainee()
+            std::string type;
+            std::cout << "Register as (trainee/admin):\n";
+            std::cin >> type;
+
+            std::string username, password;
+            std::cout << "Enter username and password:\n";
+            std::cin >> username >> password;
+
+            if(type == "admin")
+            {
+                std::string key;
+                std::cout << "Enter admin key:\n";
+                std::cin >> key;
+                if(!system.registerAdmin(username, password, key))
+                    std::cout << "Username '" << username << "' already taken.\n";
+                else
+                    std::cout << "Admin registered.\n";
+            }
+            else
+            {
+                int age;
+                double weight, height;
+                std::string genderStr, activityStr;
+                std::cout << "Enter age, weight (kg), height (m):\n";
+                std::cin >> age >> weight >> height;
+                std::cout << "Enter gender (MALE/FEMALE/OTHER):\n";
+                std::cin >> genderStr;
+                std::cout << "Enter activity level (SEDENTARY/LIGHT/MODERATE/ACTIVE/VERY_ACTIVE):\n";
+                std::cin >> activityStr;
+
+                if(!system.registerTrainee(username, password, age, weight, height,
+                    parseGender(genderStr), parseActivityLevel(activityStr)))
+                    std::cout << "Username '" << username << "' already taken.\n";
+                else
+                    std::cout << "Trainee registered.\n";
+            }
         }
         else if(input == "4")
         {
